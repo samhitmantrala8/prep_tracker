@@ -1,13 +1,18 @@
 {
   "name": "prep-tracker-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "React and Tailwind dashboard for tracking DSA, job applications, behavioral prep, and resume prep.",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "check": "npm run lint && npm run build"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "date-fns": "^4.4.0",

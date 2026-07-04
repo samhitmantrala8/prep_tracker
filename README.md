@@ -52,3 +52,37 @@ Valid job keys:
 - `weekly_resume_start`
 - `weekly_resume_check`
 
+## Deployment
+
+Docker is not required for this project.
+
+### Backend on Render
+
+Create a Render Web Service from the GitHub repo and set:
+
+```text
+Root Directory: backend
+Runtime: Python 3
+Build Command: pip install -r requirements.txt
+Start Command: gunicorn run:app --bind 0.0.0.0:$PORT --workers 2
+```
+
+Add the backend environment variables from `backend/.env.example` in the Render dashboard. Keep `EMAIL_DRY_RUN=false` only when the Resend API key and sender/recipient are correct.
+
+### Frontend on Netlify
+
+Create a Netlify site from the same GitHub repo and set:
+
+```text
+Base directory: frontend
+Build command: npm run build
+Publish directory: dist
+```
+
+Add this frontend environment variable in Netlify:
+
+```text
+VITE_API_BASE_URL=https://your-render-backend.onrender.com/api
+```
+
+The included Dockerfiles are optional. They are useful if you later want container-based deployment, but the normal Render and Netlify flows do not need them.
