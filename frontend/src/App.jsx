@@ -418,21 +418,6 @@ function TrackerApp({ accessCode, onLock }) {
               </div>
             </section>
 
-            <div className="grid gap-4 xl:grid-cols-3">
-              {sessionMeta.map((meta) => (
-                <SessionCard
-                  key={meta.key}
-                  meta={meta}
-                  session={log.sessions?.[meta.key]}
-                  onChange={(field, value) =>
-                    updateLog((draft) => {
-                      draft.sessions[meta.key][field] = value;
-                    })
-                  }
-                />
-              ))}
-            </div>
-
             <div className="grid gap-4 xl:grid-cols-2">
               <MetricCard icon={Sparkles} title="Striver A2Z Revision">
                 <div className="space-y-3">
@@ -512,7 +497,24 @@ function TrackerApp({ accessCode, onLock }) {
                   </div>
                 </div>
               </MetricCard>
+            </div>
 
+            <div className="grid gap-4 xl:grid-cols-3">
+              {sessionMeta.map((meta) => (
+                <SessionCard
+                  key={meta.key}
+                  meta={meta}
+                  session={log.sessions?.[meta.key]}
+                  onChange={(field, value) =>
+                    updateLog((draft) => {
+                      draft.sessions[meta.key][field] = value;
+                    })
+                  }
+                />
+              ))}
+            </div>
+
+            <div className="grid gap-4 xl:grid-cols-2">
               <MetricCard icon={TimerReset} title="Behavioral Interview">
                 <div className="space-y-3">
                   <CheckboxRow
@@ -686,4 +688,3 @@ export default function App() {
 
   return <TrackerApp accessCode={accessCode} onLock={lock} />;
 }
-
