@@ -15,12 +15,28 @@ def create_app():
     app = Flask(__name__)
     CORS(app, resources={r"/api/*": {"origins": "*"}})
 
+    @app.get("/")
+    def root_health():
+        return jsonify(
+            {
+                "ok": True,
+                "service": "prep-tracker-backend",
+                "health": "/api/health",
+            }
+        )
+
+    @app.get("/health")
+    def plain_health():
+        return jsonify({"ok": True, "service": "prep-tracker-backend"})
+
     @app.before_request
     def require_app_code():
         if request.method == "OPTIONS":
             return None
 
         public_paths = {
+            "/",
+            "/health",
             "/api/health",
             "/api/schedule",
         }
@@ -41,4 +57,3 @@ def create_app():
         start_scheduler(app)
 
     return app
-

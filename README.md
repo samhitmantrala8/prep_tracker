@@ -86,3 +86,13 @@ VITE_API_BASE_URL=https://your-render-backend.onrender.com/api
 ```
 
 The included Dockerfiles are optional. They are useful if you later want container-based deployment, but the normal Render and Netlify flows do not need them.
+
+### UptimeRobot
+
+The backend exposes public health endpoints for uptime checks:
+
+```text
+https://your-render-backend.onrender.com/
+https://your-render-backend.onrender.com/health
+https://your-render-backend.onrender.com/api/health
+```
