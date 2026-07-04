@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta
 
 from flask import Blueprint, jsonify, request
 
+from .cron_tick import dispatch_due_emails
 from .db import get_logs_between, get_or_create_log, now_ist, update_log
 from .emailer import send_scheduled_email
 from .email_templates import JOB_DEFINITIONS, build_email
@@ -102,14 +103,27 @@ def manual_email_send(job_key):
     return jsonify(send_scheduled_email(job_key))
 
 
-@bp.route("/cron/send/<job_key>", methods=["GET", "POST"])
-def cron_email_send(job_key):
+def _cron_secret_is_valid():
     expected = os.getenv("CRON_SECRET", "")
     provided = request.args.get("key") or request.headers.get("X-Cron-Key", "")
-    if expected and provided != expected:
+    return not expected or provided == expected
+
+
+@bp.route("/cron/tick", methods=["GET", "POST"])
+def cron_tick():
+    if not _cron_secret_is_valid():
+        return jsonify({"error": "Invalid cron key."}), 401
+
+    return jsonify(dispatch_due_emails())
+
+
+@bp.route("/cron/send/<job_key>", methods=["GET", "POST"])
+def cron_email_send(job_key):
+    if not _cron_secret_is_valid():
         return jsonify({"error": "Invalid cron key."}), 401
 
     if job_key not in JOB_DEFINITIONS:
         return jsonify({"error": "Unknown email job."}), 404
 
-    return jsonify(send_scheduled_email(job_key))
+    scheduled_for = f"{now_ist().date().isoformat()}:{job_key}:manual_cron"
+    return jsonify(send_scheduled_email(job_key, scheduled_for=scheduled_for, trigger="cron_send"))

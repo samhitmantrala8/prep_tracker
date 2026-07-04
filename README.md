@@ -41,6 +41,14 @@ For Render deployment, prefer external cron jobs that call:
 GET /api/cron/send/<job_key>?key=<CRON_SECRET>
 ```
 
+If using UptimeRobot, call this every 5 minutes instead:
+
+```text
+GET /api/cron/tick?key=<CRON_SECRET>
+```
+
+The tick endpoint checks the current IST time, sends only due emails, and avoids duplicate sends for the same scheduled reminder.
+
 Valid job keys:
 
 - `morning_dsa`
@@ -96,3 +104,5 @@ https://your-render-backend.onrender.com/
 https://your-render-backend.onrender.com/health
 https://your-render-backend.onrender.com/api/health
 ```
+
+The root health URL only keeps the backend awake. It does not send reminder emails. Use `/api/cron/tick?key=<CRON_SECRET>` for scheduled reminder dispatch.

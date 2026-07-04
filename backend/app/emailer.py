@@ -10,7 +10,7 @@ def _split_recipients(value):
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
-def send_scheduled_email(job_key):
+def send_scheduled_email(job_key, scheduled_for=None, scheduled_at=None, trigger="manual"):
     frontend_url = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
     email = build_email(job_key, frontend_url)
     recipients = _split_recipients(os.getenv("EMAIL_TO", ""))
@@ -23,7 +23,12 @@ def send_scheduled_email(job_key):
         "to": recipients,
         "provider": os.getenv("EMAIL_PROVIDER", "resend"),
         "status": "queued",
+        "trigger": trigger,
     }
+    if scheduled_for:
+        event["scheduled_for"] = scheduled_for
+    if scheduled_at:
+        event["scheduled_at"] = scheduled_at
 
     if dry_run:
         event.update({"status": "dry_run", "message": "EMAIL_DRY_RUN is enabled."})
@@ -67,4 +72,3 @@ def send_scheduled_email(job_key):
         )
 
     return record_email_event(event)
-
