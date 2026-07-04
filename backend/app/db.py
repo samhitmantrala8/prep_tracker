@@ -3,7 +3,9 @@ from copy import deepcopy
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
+from bson import ObjectId
 from pymongo import ASCENDING, MongoClient, ReturnDocument
+from pymongo.errors import DuplicateKeyError
 
 
 _client = None
@@ -36,6 +38,11 @@ def ensure_indexes():
     db.daily_logs.create_index([("date", ASCENDING)], unique=True)
     db.email_events.create_index([("created_at", ASCENDING)])
     db.email_events.create_index([("job_key", ASCENDING), ("created_at", ASCENDING)])
+    db.email_events.create_index(
+        [("job_key", ASCENDING), ("scheduled_for", ASCENDING)],
+        unique=True,
+        partialFilterExpression={"scheduled_for": {"$exists": True}},
+    )
 
 
 def default_log(date_str):
@@ -156,8 +163,36 @@ def get_logs_between(start_date, end_date):
 def record_email_event(event):
     db = get_db()
     event["created_at"] = now_ist()
+    event["updated_at"] = event["created_at"]
     result = db.email_events.insert_one(event)
-    event["_id"] = str(result.inserted_id)
-    event["created_at"] = event["created_at"].isoformat()
-    return event
+    return serialize_doc({**event, "_id": result.inserted_id})
 
+
+def claim_email_event(event):
+    db = get_db()
+    event["created_at"] = now_ist()
+    event["updated_at"] = event["created_at"]
+    event["status"] = "sending"
+
+    try:
+        result = db.email_events.insert_one(event)
+        return serialize_doc({**event, "_id": result.inserted_id}), True
+    except DuplicateKeyError:
+        existing = db.email_events.find_one(
+            {
+                "job_key": event["job_key"],
+                "scheduled_for": event["scheduled_for"],
+            }
+        )
+        return serialize_doc(existing), False
+
+
+def update_email_event(event_id, updates):
+    db = get_db()
+    updates["updated_at"] = now_ist()
+    doc = db.email_events.find_one_and_update(
+        {"_id": ObjectId(event_id)},
+        {"$set": updates},
+        return_document=ReturnDocument.AFTER,
+    )
+    return serialize_doc(doc)

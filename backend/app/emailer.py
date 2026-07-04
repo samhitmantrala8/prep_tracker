@@ -2,7 +2,7 @@ import os
 
 import requests
 
-from .db import record_email_event
+from .db import claim_email_event, record_email_event, update_email_event
 from .email_templates import build_email
 
 
@@ -30,19 +30,32 @@ def send_scheduled_email(job_key, scheduled_for=None, scheduled_at=None, trigger
     if scheduled_at:
         event["scheduled_at"] = scheduled_at
 
+    claimed_event = None
+    if scheduled_for:
+        claimed_event, is_new_claim = claim_email_event(event.copy())
+        if not is_new_claim:
+            claimed_event["duplicate_skipped"] = True
+            return claimed_event
+
     if dry_run:
-        event.update({"status": "dry_run", "message": "EMAIL_DRY_RUN is enabled."})
-        return record_email_event(event)
+        updates = {"status": "dry_run", "message": "EMAIL_DRY_RUN is enabled."}
+        return (
+            update_email_event(claimed_event["_id"], updates)
+            if claimed_event
+            else record_email_event({**event, **updates})
+        )
 
     api_key = os.getenv("RESEND_API_KEY")
     if not api_key or not recipients:
-        event.update(
-            {
-                "status": "skipped",
-                "message": "RESEND_API_KEY and EMAIL_TO are required to send email.",
-            }
+        updates = {
+            "status": "skipped",
+            "message": "RESEND_API_KEY and EMAIL_TO are required to send email.",
+        }
+        return (
+            update_email_event(claimed_event["_id"], updates)
+            if claimed_event
+            else record_email_event({**event, **updates})
         )
-        return record_email_event(event)
 
     response = requests.post(
         "https://api.resend.com/emails",
@@ -61,14 +74,16 @@ def send_scheduled_email(job_key, scheduled_for=None, scheduled_at=None, trigger
     )
 
     if 200 <= response.status_code < 300:
-        event.update({"status": "sent", "provider_response": response.json()})
+        updates = {"status": "sent", "provider_response": response.json()}
     else:
-        event.update(
-            {
-                "status": "failed",
-                "provider_status": response.status_code,
-                "provider_response": response.text[:1000],
-            }
-        )
+        updates = {
+            "status": "failed",
+            "provider_status": response.status_code,
+            "provider_response": response.text[:1000],
+        }
 
-    return record_email_event(event)
+    return (
+        update_email_event(claimed_event["_id"], updates)
+        if claimed_event
+        else record_email_event({**event, **updates})
+    )

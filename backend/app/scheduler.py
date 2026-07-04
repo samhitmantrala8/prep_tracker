@@ -1,7 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-from .db import timezone
+from .db import now_ist, timezone
 from .emailer import send_scheduled_email
 
 
@@ -17,12 +17,22 @@ SCHEDULES = {
 }
 
 
+def send_scheduler_email(job_key):
+    current_time = now_ist()
+    return send_scheduled_email(
+        job_key,
+        scheduled_for=f"{current_time.date().isoformat()}:{job_key}",
+        scheduled_at=current_time.isoformat(),
+        trigger="apscheduler",
+    )
+
+
 def start_scheduler(app):
     scheduler = BackgroundScheduler(timezone=timezone())
 
     for job_key, cron_kwargs in SCHEDULES.items():
         scheduler.add_job(
-            func=lambda key=job_key: send_scheduled_email(key),
+            func=lambda key=job_key: send_scheduler_email(key),
             trigger=CronTrigger(timezone=timezone(), **cron_kwargs),
             id=f"email_{job_key}",
             replace_existing=True,
@@ -33,4 +43,3 @@ def start_scheduler(app):
     scheduler.start()
     app.extensions["prep_tracker_scheduler"] = scheduler
     return scheduler
-

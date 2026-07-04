@@ -72,10 +72,12 @@ Create a Render Web Service from the GitHub repo and set:
 Root Directory: backend
 Runtime: Python 3
 Build Command: pip install -r requirements.txt
-Start Command: gunicorn run:app --bind 0.0.0.0:$PORT --workers 2
+Start Command: gunicorn run:app --bind 0.0.0.0:$PORT --workers 1
 ```
 
 Add the backend environment variables from `backend/.env.example` in the Render dashboard. Keep `EMAIL_DRY_RUN=false` only when the Resend API key and sender/recipient are correct.
+
+If you want the backend to run the IST email scheduler itself, set `ENABLE_LOCAL_SCHEDULER=true` and keep the Render start command at one Gunicorn worker. Multiple workers can start multiple scheduler processes.
 
 ### Frontend on Netlify
 
