@@ -1,6 +1,6 @@
 import os
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from bson import ObjectId
@@ -152,12 +152,14 @@ def update_log(date_str, updates):
 
 
 def get_logs_between(start_date, end_date):
-    db = get_db()
-    docs = db.daily_logs.find(
-        {"date": {"$gte": start_date, "$lte": end_date}},
-        sort=[("date", ASCENDING)],
-    )
-    return [serialize_doc(doc) for doc in docs]
+    start = datetime.strptime(start_date, "%Y-%m-%d").date()
+    end = datetime.strptime(end_date, "%Y-%m-%d").date()
+    days = (end - start).days
+
+    return [
+        get_or_create_log((start + timedelta(days=offset)).isoformat())
+        for offset in range(days + 1)
+    ]
 
 
 def record_email_event(event):
