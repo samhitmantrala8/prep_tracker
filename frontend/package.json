@@ -2,7 +2,7 @@
   "name": "prep-tracker-frontend",
   "private": true,
   "version": "1.0.0",
-  "description": "React and Tailwind dashboard for tracking DSA, job applications, behavioral prep, and resume prep.",
+  "description": "React and Tailwind dashboard for tracking DSA, job applications, ML and AI research, behavioral prep, and resume prep.",
   "type": "module",
   "scripts": {
     "dev": "vite",

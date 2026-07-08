@@ -1,6 +1,6 @@
 # Prep Tracker
 
-Full-stack DSA, job application, behavioral interview, and weekly resume-prep tracker.
+Full-stack DSA, job application, ML/AI research, behavioral interview, and weekly resume-prep tracker.
 
 - Frontend: React + Tailwind CSS
 - Backend: Flask + MongoDB Atlas

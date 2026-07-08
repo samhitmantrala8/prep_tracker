@@ -56,6 +56,14 @@ def seed_last_seven_days():
                 "minutes": random.choice([0, 15, 30, 45]),
                 "notes": "Seeded behavioral prep data.",
             },
+            "ml_research": {
+                "done": random.random() < completion_bias,
+                "minutes": random.choice([0, 30, 45, 60, 90]),
+                "focus": random.choice(
+                    ["Inference optimization", "Research paper review", "AI implementation"]
+                ),
+                "notes": "Seeded ML and research prep data.",
+            },
             "resume": {
                 "done": current.weekday() in {5, 6} and random.random() < completion_bias,
                 "notes": "Seeded weekly resume prep data." if current.weekday() in {5, 6} else "",
@@ -74,4 +82,3 @@ def seed_last_seven_days():
 if __name__ == "__main__":
     dates = seed_last_seven_days()
     print(f"Seeded dummy logs for: {', '.join(dates)}")
-

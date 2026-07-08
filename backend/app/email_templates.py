@@ -5,6 +5,11 @@ SHARED_REMINDER = """Every block also carries the daily baseline:
 - Revise Striver A2Z for 1 hour today.
 - Apply to jobs on LinkedIn, email, Instahyre, Naukri, and similar platforms.
 - Message at least 5 recruiters properly on LinkedIn or relevant hiring platforms.
+- Complete a focused ML / Research / AI session, such as inference optimization, paper review, or implementation work.
+"""
+
+
+MOTIVATION_MESSAGE = """Keep doing it daily without missing even one day. The consistency will be exponentially beneficial after a few months.
 """
 
 
@@ -109,6 +114,9 @@ Schedule: {job["schedule"]}
 
 {SHARED_REMINDER.strip()}
 
+Motivation:
+{MOTIVATION_MESSAGE.strip()}
+
 Tracker: {frontend_url}
 """
     html_body = text_body.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
@@ -121,4 +129,3 @@ Tracker: {frontend_url}
         "html": f"<div style=\"font-family:Arial,sans-serif;line-height:1.55;color:#111827\">{html_body}</div>",
         "schedule": job["schedule"],
     }
-

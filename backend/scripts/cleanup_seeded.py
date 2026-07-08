@@ -18,6 +18,7 @@ SEEDED_LOG_QUERY = {
         {"striver.notes": {"$regex": "Seeded", "$options": "i"}},
         {"jobs.notes": {"$regex": "Seeded", "$options": "i"}},
         {"behavioral.notes": {"$regex": "Seeded", "$options": "i"}},
+        {"ml_research.notes": {"$regex": "Seeded", "$options": "i"}},
         {"resume.notes": {"$regex": "Seeded", "$options": "i"}},
         {"daily_review.notes": {"$regex": "Seeded", "$options": "i"}},
     ]
@@ -32,4 +33,3 @@ if __name__ == "__main__":
     print(f"Deleted {result.deleted_count} seeded daily logs.")
     if dates:
         print("Dates:", ", ".join(dates))
-

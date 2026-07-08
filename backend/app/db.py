@@ -86,6 +86,12 @@ def default_log(date_str):
             "minutes": 0,
             "notes": "",
         },
+        "ml_research": {
+            "done": False,
+            "minutes": 0,
+            "focus": "",
+            "notes": "",
+        },
         "resume": {
             "done": False,
             "notes": "",
@@ -132,7 +138,10 @@ def get_or_create_log(date_str):
         upsert=True,
         return_document=ReturnDocument.AFTER,
     )
-    return serialize_doc(doc)
+    hydrated = deep_merge(baseline, doc)
+    hydrated["_id"] = doc["_id"]
+    hydrated["created_at"] = doc.get("created_at", baseline["created_at"])
+    return serialize_doc(hydrated)
 
 
 def update_log(date_str, updates):

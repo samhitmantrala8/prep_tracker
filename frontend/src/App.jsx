@@ -6,6 +6,7 @@ import {
   Check,
   ClipboardCheck,
   Code2,
+  Cpu,
   Loader2,
   Lock,
   LogOut,
@@ -15,6 +16,7 @@ import {
   Send,
   Sparkles,
   TimerReset,
+  TrendingUp,
 } from "lucide-react";
 import { format, parseISO, subDays } from "date-fns";
 
@@ -92,6 +94,7 @@ function getCompletion(log) {
     log.jobs?.applications_done,
     log.jobs?.recruiters_done,
     log.behavioral?.done,
+    log.ml_research?.done,
     log.daily_review?.filled,
   ];
 
@@ -515,6 +518,51 @@ function TrackerApp({ accessCode, onLock }) {
             </div>
 
             <div className="grid gap-4 xl:grid-cols-2">
+              <MetricCard icon={Cpu} title="ML / Research / AI">
+                <div className="space-y-3">
+                  <CheckboxRow
+                    checked={Boolean(log.ml_research?.done)}
+                    title="Focused session completed"
+                    description="Inference optimization, paper review, experiments, or another meaningful AI topic."
+                    onChange={(value) =>
+                      updateLog((draft) => {
+                        draft.ml_research.done = value;
+                      })
+                    }
+                  />
+                  <NumberField
+                    label="Minutes"
+                    value={log.ml_research?.minutes}
+                    onChange={(value) =>
+                      updateLog((draft) => {
+                        draft.ml_research.minutes = value;
+                      })
+                    }
+                  />
+                  <input
+                    type="text"
+                    value={log.ml_research?.focus || ""}
+                    onChange={(event) =>
+                      updateLog((draft) => {
+                        draft.ml_research.focus = event.target.value;
+                      })
+                    }
+                    className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm text-slate-950"
+                    placeholder="Focus topic, e.g. inference optimization"
+                  />
+                  <textarea
+                    value={log.ml_research?.notes || ""}
+                    onChange={(event) =>
+                      updateLog((draft) => {
+                        draft.ml_research.notes = event.target.value;
+                      })
+                    }
+                    className="min-h-20 w-full rounded-md border border-slate-200 px-3 py-2 text-sm"
+                    placeholder="Research notes or outcomes"
+                  />
+                </div>
+              </MetricCard>
+
               <MetricCard icon={TimerReset} title="Behavioral Interview">
                 <div className="space-y-3">
                   <CheckboxRow
@@ -538,7 +586,9 @@ function TrackerApp({ accessCode, onLock }) {
                   />
                 </div>
               </MetricCard>
+            </div>
 
+            <div className="grid gap-4 xl:grid-cols-2">
               <MetricCard icon={ClipboardCheck} title={showResume ? "Weekly Resume Prep" : "Resume Prep"}>
                 <div className="space-y-3">
                   <CheckboxRow
@@ -574,6 +624,7 @@ function TrackerApp({ accessCode, onLock }) {
                 </div>
               </MetricCard>
             </div>
+
           </div>
 
           <aside className="space-y-5">
@@ -616,7 +667,7 @@ function TrackerApp({ accessCode, onLock }) {
                 <h2 className="text-base font-semibold text-slate-950">Reminder Rules</h2>
               </div>
               <div className="space-y-3 text-sm text-slate-600">
-                <p>Every DSA email includes Striver A2Z revision and recruiter outreach reminders.</p>
+                <p>Every email includes Striver A2Z, recruiter outreach, ML/AI, and motivation reminders.</p>
                 <p>Resume prep starts Saturday morning and gets checked Sunday night.</p>
                 <p>Daily tracker fill reminder goes out at 10:15 PM IST.</p>
               </div>
@@ -659,6 +710,19 @@ function TrackerApp({ accessCode, onLock }) {
             </section>
           </aside>
         </div>
+
+        <section className="mt-5 rounded-lg border border-teal-200 bg-teal-50 p-5 shadow-sm">
+          <div className="flex items-start gap-3">
+            <TrendingUp className="mt-0.5 shrink-0 text-teal-700" size={22} />
+            <div>
+              <h2 className="text-base font-semibold text-slate-950">Daily Motivation</h2>
+              <p className="mt-1 text-sm leading-6 text-slate-700">
+                Keep doing it daily without missing even one day. The consistency will be
+                exponentially beneficial after a few months.
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );
