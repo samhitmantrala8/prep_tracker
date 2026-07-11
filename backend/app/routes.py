@@ -7,6 +7,7 @@ from .cron_tick import dispatch_due_emails
 from .db import get_logs_between, get_or_create_log, now_ist, update_log
 from .emailer import send_scheduled_email
 from .email_templates import JOB_DEFINITIONS, build_email
+from .links import get_frontend_url
 from .scheduler import SCHEDULES
 
 bp = Blueprint("api", __name__)
@@ -91,7 +92,7 @@ def list_logs():
 @bp.get("/email/preview/<job_key>")
 def email_preview(job_key):
     try:
-        return jsonify(build_email(job_key, os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")))
+        return jsonify(build_email(job_key, get_frontend_url()))
     except KeyError:
         return jsonify({"error": "Unknown email job."}), 404
 

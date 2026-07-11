@@ -4,6 +4,7 @@ import requests
 
 from .db import claim_email_event, record_email_event, update_email_event
 from .email_templates import build_email
+from .links import get_frontend_url
 
 
 def _split_recipients(value):
@@ -11,8 +12,7 @@ def _split_recipients(value):
 
 
 def send_scheduled_email(job_key, scheduled_for=None, scheduled_at=None, trigger="manual"):
-    frontend_url = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
-    email = build_email(job_key, frontend_url)
+    email = build_email(job_key, get_frontend_url())
     recipients = _split_recipients(os.getenv("EMAIL_TO", ""))
     sender = os.getenv("EMAIL_FROM", "Prep Tracker <onboarding@resend.dev>")
     dry_run = os.getenv("EMAIL_DRY_RUN", "true").lower() == "true"
