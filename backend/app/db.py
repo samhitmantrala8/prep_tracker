@@ -51,19 +51,13 @@ def default_log(date_str):
         "date": date_str,
         "sessions": {
             "morning": {
-                "label": "9 AM to 1 PM",
-                "cf_done": False,
-                "lc_done": False,
-                "notes": "",
-            },
-            "afternoon": {
-                "label": "1:05 PM to 5:30 PM",
+                "label": "8 AM DSA block",
                 "cf_done": False,
                 "lc_done": False,
                 "notes": "",
             },
             "evening": {
-                "label": "5:35 PM to 9:30 PM",
+                "label": "8 PM DSA block",
                 "cf_done": False,
                 "lc_done": False,
                 "notes": "",
@@ -90,6 +84,10 @@ def default_log(date_str):
             "done": False,
             "minutes": 0,
             "focus": "",
+            "notes": "",
+        },
+        "weekly_codechef": {
+            "done": False,
             "notes": "",
         },
         "resume": {

@@ -28,11 +28,6 @@ def seed_last_seven_days():
                     "lc_done": random.random() < completion_bias,
                     "notes": "Seeded local-testing data.",
                 },
-                "afternoon": {
-                    "cf_done": random.random() < completion_bias,
-                    "lc_done": random.random() < completion_bias,
-                    "notes": "Seeded local-testing data.",
-                },
                 "evening": {
                     "cf_done": random.random() < completion_bias,
                     "lc_done": random.random() < completion_bias,
@@ -60,9 +55,13 @@ def seed_last_seven_days():
                 "done": random.random() < completion_bias,
                 "minutes": random.choice([0, 30, 45, 60, 90]),
                 "focus": random.choice(
-                    ["Inference optimization", "Research paper review", "AI implementation"]
+                    ["Kaggle competition", "Hugging Face model work", "GenAI research"]
                 ),
                 "notes": "Seeded ML and research prep data.",
+            },
+            "weekly_codechef": {
+                "done": current.weekday() in {5, 6} and random.random() < completion_bias,
+                "notes": "Seeded weekly CodeChef data." if current.weekday() in {5, 6} else "",
             },
             "resume": {
                 "done": current.weekday() in {5, 6} and random.random() < completion_bias,

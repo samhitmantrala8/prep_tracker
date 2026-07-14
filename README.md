@@ -52,8 +52,6 @@ The tick endpoint checks the current IST time, sends only due emails, and avoids
 Valid job keys:
 
 - `morning_dsa`
-- `midday_check`
-- `afternoon_dsa`
 - `evening_dsa`
 - `behavioral_prep`
 - `daily_log_reminder`

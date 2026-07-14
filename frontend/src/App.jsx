@@ -26,29 +26,21 @@ const ACCESS_KEY = "prep_tracker_access_code";
 const sessionMeta = [
   {
     key: "morning",
-    title: "Morning DSA",
-    time: "9:00 AM - 1:00 PM",
+    title: "DSA Block 1",
+    time: "8:00 AM IST",
     accent: "border-l-teal-600",
   },
   {
-    key: "afternoon",
-    title: "Afternoon DSA",
-    time: "1:05 PM - 5:30 PM",
-    accent: "border-l-sky-600",
-  },
-  {
     key: "evening",
-    title: "Evening DSA",
-    time: "5:35 PM - 9:30 PM",
+    title: "DSA Block 2",
+    time: "8:00 PM IST",
     accent: "border-l-amber-500",
   },
 ];
 
 const emailJobs = [
-  ["morning_dsa", "9:00 AM", "DSA before 1 PM"],
-  ["midday_check", "1:00 PM", "Morning check"],
-  ["afternoon_dsa", "1:05 PM", "DSA before 5:30 PM"],
-  ["evening_dsa", "5:35 PM", "DSA before 9:30 PM"],
+  ["morning_dsa", "8:00 AM", "DSA block 1"],
+  ["evening_dsa", "8:00 PM", "DSA block 2"],
   ["behavioral_prep", "9:30 PM", "Behavioral prep"],
   ["daily_log_reminder", "10:15 PM", "Fill tracker"],
   ["weekly_resume_start", "Sat 9:00 AM", "Resume prep"],
@@ -93,8 +85,6 @@ function getCompletion(log) {
   const values = [
     log.sessions?.morning?.cf_done,
     log.sessions?.morning?.lc_done,
-    log.sessions?.afternoon?.cf_done,
-    log.sessions?.afternoon?.lc_done,
     log.sessions?.evening?.cf_done,
     log.sessions?.evening?.lc_done,
     log.striver?.done,
@@ -106,7 +96,9 @@ function getCompletion(log) {
   ];
 
   const weekday = parseISO(log.date).getDay();
-  if (weekday === 0 || weekday === 6) values.push(log.resume?.done);
+  if (weekday === 0 || weekday === 6) {
+    values.push(log.resume?.done, log.weekly_codechef?.done);
+  }
 
   const total = values.length;
   const done = values.filter(Boolean).length;
@@ -215,14 +207,14 @@ function SessionCard({ session, meta, onChange }) {
       <div className="space-y-3">
         <CheckboxRow
           checked={Boolean(session?.cf_done)}
-          title="1 Codeforces question"
-          description="Mark Yes when this block's CF problem is done."
+          title="1 CF 1700+ question"
+          description="Mark Yes when this block's Codeforces 1700+ problem is done."
           onChange={(value) => onChange("cf_done", value)}
         />
         <CheckboxRow
           checked={Boolean(session?.lc_done)}
-          title="1 LC Hard or 2 LC Mediums"
-          description="Either path counts for the LeetCode target."
+          title="1 LC Medium+ question"
+          description="Mark Yes when this block's LeetCode Medium+ problem is done."
           onChange={(value) => onChange("lc_done", value)}
         />
       </div>
@@ -442,6 +434,66 @@ function TrackerApp({ accessCode, onLock }) {
               </div>
             </section>
 
+            <div className="grid gap-4 xl:grid-cols-3">
+              {sessionMeta.map((meta) => (
+                <SessionCard
+                  key={meta.key}
+                  meta={meta}
+                  session={log.sessions?.[meta.key]}
+                  onChange={(field, value) =>
+                    updateLog((draft) => {
+                      draft.sessions[meta.key][field] = value;
+                    })
+                  }
+                />
+              ))}
+
+              <MetricCard icon={Cpu} title="ML / Kaggle / GenAI">
+                <div className="space-y-3">
+                  <CheckboxRow
+                    checked={Boolean(log.ml_research?.done)}
+                    title="Focused session completed"
+                    description="Kaggle, GenAI, Hugging Face, research, ML competitions, or implementation work."
+                    onChange={(value) =>
+                      updateLog((draft) => {
+                        draft.ml_research.done = value;
+                      })
+                    }
+                  />
+                  <NumberField
+                    label="Minutes"
+                    value={log.ml_research?.minutes}
+                    onChange={(value) =>
+                      updateLog((draft) => {
+                        draft.ml_research.minutes = value;
+                      })
+                    }
+                  />
+                  <input
+                    type="text"
+                    value={log.ml_research?.focus || ""}
+                    onChange={(event) =>
+                      updateLog((draft) => {
+                        draft.ml_research.focus = event.target.value;
+                      })
+                    }
+                    className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm text-slate-950"
+                    placeholder="Focus topic, e.g. Kaggle, HF, GenAI, research"
+                  />
+                  <textarea
+                    value={log.ml_research?.notes || ""}
+                    onChange={(event) =>
+                      updateLog((draft) => {
+                        draft.ml_research.notes = event.target.value;
+                      })
+                    }
+                    className="min-h-20 w-full rounded-md border border-slate-200 px-3 py-2 text-sm"
+                    placeholder="Research notes, experiments, or competition progress"
+                  />
+                </div>
+              </MetricCard>
+            </div>
+
             <div className="grid gap-4 xl:grid-cols-2">
               <MetricCard icon={Sparkles} title="Striver A2Z Revision">
                 <div className="space-y-3">
@@ -523,67 +575,7 @@ function TrackerApp({ accessCode, onLock }) {
               </MetricCard>
             </div>
 
-            <div className="grid gap-4 xl:grid-cols-3">
-              {sessionMeta.map((meta) => (
-                <SessionCard
-                  key={meta.key}
-                  meta={meta}
-                  session={log.sessions?.[meta.key]}
-                  onChange={(field, value) =>
-                    updateLog((draft) => {
-                      draft.sessions[meta.key][field] = value;
-                    })
-                  }
-                />
-              ))}
-            </div>
-
             <div className="grid gap-4 xl:grid-cols-2">
-              <MetricCard icon={Cpu} title="ML / Research / AI">
-                <div className="space-y-3">
-                  <CheckboxRow
-                    checked={Boolean(log.ml_research?.done)}
-                    title="Focused session completed"
-                    description="Inference optimization, paper review, experiments, or another meaningful AI topic."
-                    onChange={(value) =>
-                      updateLog((draft) => {
-                        draft.ml_research.done = value;
-                      })
-                    }
-                  />
-                  <NumberField
-                    label="Minutes"
-                    value={log.ml_research?.minutes}
-                    onChange={(value) =>
-                      updateLog((draft) => {
-                        draft.ml_research.minutes = value;
-                      })
-                    }
-                  />
-                  <input
-                    type="text"
-                    value={log.ml_research?.focus || ""}
-                    onChange={(event) =>
-                      updateLog((draft) => {
-                        draft.ml_research.focus = event.target.value;
-                      })
-                    }
-                    className="h-10 w-full rounded-md border border-slate-200 px-3 text-sm text-slate-950"
-                    placeholder="Focus topic, e.g. inference optimization"
-                  />
-                  <textarea
-                    value={log.ml_research?.notes || ""}
-                    onChange={(event) =>
-                      updateLog((draft) => {
-                        draft.ml_research.notes = event.target.value;
-                      })
-                    }
-                    className="min-h-20 w-full rounded-md border border-slate-200 px-3 py-2 text-sm"
-                    placeholder="Research notes or outcomes"
-                  />
-                </div>
-              </MetricCard>
-
               <MetricCard icon={TimerReset} title="Behavioral Interview">
                 <div className="space-y-3">
                   <CheckboxRow
@@ -622,6 +614,19 @@ function TrackerApp({ accessCode, onLock }) {
                       })
                     }
                   />
+                  {showResume ? (
+                    <CheckboxRow
+                      checked={Boolean(log.weekly_codechef?.done)}
+                      title="1 weekly CodeChef question"
+                      description="Complete one CodeChef question on Saturday or Sunday."
+                      onChange={(value) =>
+                        updateLog((draft) => {
+                          draft.weekly_codechef = draft.weekly_codechef || { done: false, notes: "" };
+                          draft.weekly_codechef.done = value;
+                        })
+                      }
+                    />
+                  ) : null}
                   <CheckboxRow
                     checked={Boolean(log.daily_review?.filled)}
                     title="Daily tracker filled"
@@ -688,7 +693,9 @@ function TrackerApp({ accessCode, onLock }) {
                 <h2 className="text-base font-semibold text-slate-950">Reminder Rules</h2>
               </div>
               <div className="space-y-3 text-sm text-slate-600">
-                <p>Every email includes the priority prep block, Striver A2Z, recruiter outreach, ML/AI, and motivation reminders.</p>
+                <p>DSA emails go out at 8:00 AM and 8:00 PM IST. Afternoon DSA reminders are removed.</p>
+                <p>Every email includes the priority prep block, Striver A2Z, recruiter outreach, ML/Kaggle/GenAI, and motivation reminders.</p>
+                <p>Saturday/Sunday includes 1 weekly CodeChef question.</p>
                 <p>Resume prep starts Saturday morning and gets checked Sunday night.</p>
                 <p>Daily tracker fill reminder goes out at 10:15 PM IST.</p>
               </div>

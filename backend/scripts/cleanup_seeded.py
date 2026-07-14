@@ -19,6 +19,7 @@ SEEDED_LOG_QUERY = {
         {"jobs.notes": {"$regex": "Seeded", "$options": "i"}},
         {"behavioral.notes": {"$regex": "Seeded", "$options": "i"}},
         {"ml_research.notes": {"$regex": "Seeded", "$options": "i"}},
+        {"weekly_codechef.notes": {"$regex": "Seeded", "$options": "i"}},
         {"resume.notes": {"$regex": "Seeded", "$options": "i"}},
         {"daily_review.notes": {"$regex": "Seeded", "$options": "i"}},
     ]

@@ -15,7 +15,8 @@ SHARED_REMINDER = """Every block also carries the daily baseline:
 - Revise Striver A2Z for 1 hour today.
 - Apply to jobs on LinkedIn, email, Instahyre, Naukri, and similar platforms.
 - Message at least 5 recruiters properly on LinkedIn or relevant hiring platforms.
-- Complete a focused ML / Research / AI session, such as inference optimization, paper review, or implementation work.
+- Complete the ML / Kaggle / GenAI / Hugging Face / research / ML competitions block.
+- On Saturday or Sunday, complete 1 CodeChef question for the weekly DSA add-on.
 """
 
 
@@ -25,43 +26,23 @@ MOTIVATION_MESSAGE = """Keep doing it daily without missing even one day. The co
 
 JOB_DEFINITIONS = {
     "morning_dsa": {
-        "schedule": "Daily at 9:00 AM IST",
-        "subject": "9 AM DSA Block: CF + LeetCode before 1 PM",
-        "body": """Before 1 PM, complete:
-- 1 Codeforces question.
-- Either 1 LeetCode Hard or 2 LeetCode Mediums.
+        "schedule": "Daily at 8:00 AM IST",
+        "subject": "8 AM DSA Block: 1 CF 1700+ + 1 LC Medium+",
+        "body": """Complete this DSA block:
+- 1 Codeforces 1700+ question.
+- 1 LeetCode Medium+ question.
 
-Start clean, keep the timer honest, and mark this block in the tracker after you finish.
-""",
-    },
-    "midday_check": {
-        "schedule": "Daily at 1:00 PM IST",
-        "subject": "1 PM Check-in: Did you finish the morning DSA block?",
-        "body": """Quick check-in:
-- Did you finish 1 Codeforces question?
-- Did you finish either 1 LeetCode Hard or 2 LeetCode Mediums?
-
-Open the tracker and mark the morning block as Yes or No.
-""",
-    },
-    "afternoon_dsa": {
-        "schedule": "Daily at 1:05 PM IST",
-        "subject": "1:05 PM DSA Block: CF + LeetCode before 5:30 PM",
-        "body": """Before 5:30 PM, complete:
-- 1 Codeforces question.
-- Either 1 LeetCode Hard or 2 LeetCode Mediums.
-
-This is the second DSA push of the day. Mark it in the tracker once it is done.
+Start clean, keep the timer honest, and mark this first DSA block in the tracker after you finish.
 """,
     },
     "evening_dsa": {
-        "schedule": "Daily at 5:35 PM IST",
-        "subject": "5:35 PM Final DSA Block: CF + LeetCode before 9:30 PM",
-        "body": """Before 9:30 PM, complete:
-- 1 Codeforces question.
-- Either 1 LeetCode Hard or 2 LeetCode Mediums.
+        "schedule": "Daily at 8:00 PM IST",
+        "subject": "8 PM DSA Block: 1 CF 1700+ + 1 LC Medium+",
+        "body": """Complete this DSA block:
+- 1 Codeforces 1700+ question.
+- 1 LeetCode Medium+ question.
 
-Finish the third DSA block and update the tracker honestly.
+Finish the second DSA block and update the tracker honestly.
 """,
     },
     "behavioral_prep": {
@@ -79,10 +60,12 @@ After the session, mark behavioral prep in the tracker.
         "schedule": "Daily at 10:15 PM IST",
         "subject": "Daily Tracker Reminder: Mark today's progress",
         "body": """Open Prep Tracker and mark what you completed today:
-- All 3 DSA blocks.
+- Both DSA blocks.
 - Striver A2Z revision.
 - Job applications and recruiter messages.
+- ML / Kaggle / GenAI / Hugging Face / research / ML competitions block.
 - Behavioral prep.
+- Weekend CodeChef question if today is Saturday or Sunday.
 - Notes for anything missed.
 
 The point is not to look perfect. The point is to keep the data honest.

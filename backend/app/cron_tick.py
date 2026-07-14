@@ -5,10 +5,8 @@ from .emailer import send_scheduled_email
 
 
 POLL_SCHEDULES = [
-    {"job_key": "morning_dsa", "hour": 9, "minute": 0},
-    {"job_key": "midday_check", "hour": 13, "minute": 0},
-    {"job_key": "afternoon_dsa", "hour": 13, "minute": 5},
-    {"job_key": "evening_dsa", "hour": 17, "minute": 35},
+    {"job_key": "morning_dsa", "hour": 8, "minute": 0},
+    {"job_key": "evening_dsa", "hour": 20, "minute": 0},
     {"job_key": "behavioral_prep", "hour": 21, "minute": 30},
     {"job_key": "daily_log_reminder", "hour": 22, "minute": 15},
     {"job_key": "weekly_resume_start", "hour": 9, "minute": 0, "weekdays": {5}},
@@ -75,4 +73,3 @@ def dispatch_due_emails(current_time=None, lookback_minutes=12):
         "sent": sent,
         "skipped": skipped,
     }
-

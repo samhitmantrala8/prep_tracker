@@ -6,10 +6,8 @@ from .emailer import send_scheduled_email
 
 
 SCHEDULES = {
-    "morning_dsa": {"day_of_week": "*", "hour": 9, "minute": 0},
-    "midday_check": {"day_of_week": "*", "hour": 13, "minute": 0},
-    "afternoon_dsa": {"day_of_week": "*", "hour": 13, "minute": 5},
-    "evening_dsa": {"day_of_week": "*", "hour": 17, "minute": 35},
+    "morning_dsa": {"day_of_week": "*", "hour": 8, "minute": 0},
+    "evening_dsa": {"day_of_week": "*", "hour": 20, "minute": 0},
     "behavioral_prep": {"day_of_week": "*", "hour": 21, "minute": 30},
     "daily_log_reminder": {"day_of_week": "*", "hour": 22, "minute": 15},
     "weekly_resume_start": {"day_of_week": "sat", "hour": 9, "minute": 0},
